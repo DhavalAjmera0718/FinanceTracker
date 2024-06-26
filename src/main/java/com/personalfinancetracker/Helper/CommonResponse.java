@@ -1,10 +1,11 @@
 package com.personalfinancetracker.Helper;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class CommonResponse {
@@ -19,6 +20,9 @@ public class CommonResponse {
 	public static final String WALLET_DEPOSITE =  " AMOUNT HAS BEEN DEPOSITED...!!!";
 	
 	public static final String WALLET_WITHDRAW =  " HAS BEEN DEDUCTED FROM ACCOUNT NO - ";
+	
+	public static final String INSUFIECIENT_BALANCE =  "INSUFIECIENT BALANCE IN YOUR ACCOUNT YOUR ACCOUNT BALANCE IS ";
+	
 	
 	
 	
@@ -38,7 +42,17 @@ public class CommonResponse {
 	        }
 	        return BANK_CODE + sb.toString();
 	    }
+/********************************************************[ DATE AND TIME FORMATER ]********************************************************************************/	
 	
-	
+	  public static String DateTimeFormatter() 
+	  {
+		  LocalDateTime nowDateTime = LocalDateTime.now();
+		  
+		  DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+		  
+		   return nowDateTime.format(formatter);
+		  
+		  
+	  }
 	
 }

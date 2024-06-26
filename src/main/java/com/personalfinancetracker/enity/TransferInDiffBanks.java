@@ -1,7 +1,6 @@
 package com.personalfinancetracker.enity;
 
-import java.util.Date;
-
+import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,30 +16,33 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Getter
 @Setter
-@Data
-@Table(name = "transactionTable")
-public class TransactionEntity {
+@Table(name = "MultiBankTransaction")
+public class TransferInDiffBanks {
 	
+	@Id	
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long multiBankId;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long tRid;
-	private String tRname;
-	@Column(name = "ReceiverAccountNo")
-	private String tRaccountNo; // Reciver Account
-	private String tRaccountType;
-	private Double tRbalance;
-	private String tRsenderAccountNo;
+	private String senderBankAc;
 	
-	@Column(name = "Description")
-	private String tRdescription;
-	
-	private String tRstatus;
+	private String receiverBankAc;
 	
 	private String transactionTime;
 	
-
+	private String description;
+	
+	@Column(name = "Amount")
+	private Double multitransactionAmount;
+	
+	
+	private String status;
+	
+	
+	
+	
+	
 
 }

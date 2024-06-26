@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.personalfinancetracker.Service.MultipleBankTransactionService;
 import com.personalfinancetracker.Service.WalletService;
+import com.personalfinancetracker.proxy.MultiBankTransactionDTO;
 import com.personalfinancetracker.proxy.TransactionDTO;
 import com.personalfinancetracker.proxy.WalletProxy;
 
@@ -25,6 +27,9 @@ public class WalletController {
 	
 	@Autowired
 	private WalletService service;
+	
+	@Autowired
+	private MultipleBankTransactionService multiSevice;
 	
 	@PostMapping("/saveWalletData")
 	public ResponseEntity<String> SaveWalletData(@RequestBody WalletProxy walletProxy) 
@@ -80,4 +85,43 @@ public ResponseEntity<String> withDrawMoney(@PathVariable("accontNumber") String
 		return new ResponseEntity<String>(service.WithDrawMoney(accontNumber, money) , HttpStatus.ACCEPTED);
 			
 	}	
+
+/*************************************************************[ MONEY TRANSFER MY WALLET TO  DIFFRENT BANK]****************************************************************************/
+@PostMapping("myWalletToDiffWallet/{accountNo}")
+public ResponseEntity<String> trMyBankToAnotherBank(@PathVariable("accountNo") String accountNo  ,@RequestBody MultiBankTransactionDTO multiBankTrDTO ) throws Exception 
+{
+	if (accountNo!=null) {
+		return new ResponseEntity<String>(multiSevice.trMyBankToAnotherBank(accountNo, multiBankTrDTO), HttpStatus.OK);
+	}
+	return new ResponseEntity<String>("PLEASE CHECK YOUR BANK ACCOUNT NUMBER " ,  HttpStatus.BAD_REQUEST);
 }
+
+/*******************************************************[DEPOSITE FROM ANOTHER ACCOUNT ]*******************************************************************************/	
+@PostMapping("DepositesFromAnotherAccount/{accountNo}")
+public ResponseEntity<String> DepositesFromAnotherAccount(@PathVariable("accountNo") String accountNo ,@RequestBody  MultiBankTransactionDTO mDto) 
+{
+	
+	if (accountNo!=null) {
+		return new ResponseEntity<String>(multiSevice.DepositesFromAnotherAccount(accountNo, mDto) , HttpStatus.OK);
+	}
+	return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

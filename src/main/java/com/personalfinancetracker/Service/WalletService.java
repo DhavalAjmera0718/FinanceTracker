@@ -2,6 +2,7 @@ package com.personalfinancetracker.Service;
 
 import org.springframework.stereotype.Service;
 
+import com.personalfinancetracker.proxy.MultiBankTransactionDTO;
 import com.personalfinancetracker.proxy.TransactionDTO;
 import com.personalfinancetracker.proxy.WalletProxy;
 
@@ -23,4 +24,6 @@ public interface WalletService {
 	public String DepositeMoney(String accontNumber , TransactionDTO money);
 	
 	public String WithDrawMoney(String accontNumber , TransactionDTO money) ;
+	
+	
 }

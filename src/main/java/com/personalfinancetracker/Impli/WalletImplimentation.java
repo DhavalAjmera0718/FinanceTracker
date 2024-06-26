@@ -1,16 +1,9 @@
 package com.personalfinancetracker.Impli;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import javax.sound.midi.Soundbank;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.personalfinancetracker.Helper.CommonResponse;
@@ -72,7 +65,7 @@ public class WalletImplimentation implements WalletService {
 		return id +  CommonResponse.WALLET_DATA_DELETE_RESPONSE;
 	}
 	
-/**************************************************************[UDPATE DATA BY ID ]**********************************************************************************************************/	
+/**************************************************************[UDPATE WALLET DATA BY ID ]**********************************************************************************************************/	
 	
 	public String  UpdateWalletData(Long id , WalletProxy walletProxy) 
 	{
@@ -90,14 +83,12 @@ public class WalletImplimentation implements WalletService {
 		return id + CommonResponse.WALLET_DATA_UPDATE_RESPONSE;
 		
 	}
-/*****************************************************************************************************************************/
+/********************************************************[ DepositeMoney BY CASH]*********************************************************************/
 @Override
 public String DepositeMoney(String accontNumber , TransactionDTO money) {
 	
 	 Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accontNumber);
 	if (byAccountNo.isPresent()) {
-		
-		
 		
 		Wallet wallet = byAccountNo.get();
 		wallet.setBalance(wallet.getBalance() +  money.getBankDeposite());
@@ -106,18 +97,31 @@ public String DepositeMoney(String accontNumber , TransactionDTO money) {
 		
 		TransactionEntity transactionEntity =  new TransactionEntity();
 		transactionEntity.setTRname("Deposite");
+		transactionEntity.setTRstatus("Succsess");
+		transactionEntity.setTRsenderAccountNo("CASH");
+		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
 		transactionEntity.setTRaccountNo(wallet.getAccountNo());
 		transactionEntity.setTRaccountType(wallet.getAccountType());
 		transactionEntity.setTRbalance(money.getBankDeposite());
+		transactionEntity.setTRdescription(CommonResponse.WALLET_DEPOSITE);
 		System.err.println("TRANSACTION ENTITY " + transactionEntity);
 		transactionRepo.save(transactionEntity);
-
-		return CommonResponse.WALLET_DEPOSITE;	
+		
+		String response = " YOUR AC " 
+				+ wallet.getAccountNo()
+				+ " IS CREDITED ON "
+				+ CommonResponse.DateTimeFormatter()
+				+ " BY CASH"
+				+ " YOUR ACCOUNT BALANCE IS "
+				+wallet.getBalance() + " RS.";
+		System.err.println(response);
+		return response;	
 	}
+	
 	return "ACCOUNT NOT FOUND...";
 }
 	
-
+/**************************************************************** [ WITHDRAW  CASH MONEY ] **********************************************************************/
 @Override
 public String WithDrawMoney(String accontNumber , TransactionDTO money) {
 	
@@ -139,17 +143,23 @@ public String WithDrawMoney(String accontNumber , TransactionDTO money) {
 		
 		walletRepo.save(wallet);
 		
+		String response	= money.getBankWithDraw() +  CommonResponse.WALLET_WITHDRAW + wallet.getAccountNo() + " Your Account Balance Is " + wallet.getBalance();	
 		TransactionEntity transactionEntity =  new TransactionEntity();
 		transactionEntity.setTRname("WITHDRAW");
+		transactionEntity.setTRstatus("Succsess");
+		transactionEntity.setTRsenderAccountNo("CASH");
 		transactionEntity.setTRaccountNo(wallet.getAccountNo());
+		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
 		transactionEntity.setTRaccountType(wallet.getAccountType());
 		transactionEntity.setTRbalance(money.getBankWithDraw());
+		transactionEntity.setTRdescription(response);
 		System.err.println("TRANSACTION ENTITY " + transactionEntity);
 		transactionRepo.save(transactionEntity);
 
-		return money.getBankWithDraw() +  CommonResponse.WALLET_WITHDRAW + wallet.getAccountNo() + " Your Account Balance Is " + wallet.getBalance();	
+		return response;
 	}
 	return "ACCOUNT NOT FOUND...";
 }
+
 	
 }
