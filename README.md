@@ -27,10 +27,10 @@ WITHDRAW MONEY BY CASH - http://localhost:7777/wallet/withDrawMoney/{ACCOUNT NUM
 
 7] 
 AMOUNT TRANSFER MY BANK TO DIFFRENT BANK - http://localhost:7777/wallet/myWalletToDiffWallet/{ACCOUNT NUMBER IN DB}
-
 {
     "receiverBankAc": "SBI456565655",
     "sendMoney": 100000.00
+    
 }
 8 ]
 DEPOSITE COMES DROM DIFF BANK ACCOUNT - http://localhost:7777/wallet/DepositesFromAnotherAccount/{ACCOUNT NUMBER FROM DB }
