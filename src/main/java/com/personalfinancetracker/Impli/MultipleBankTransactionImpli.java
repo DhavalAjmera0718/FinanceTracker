@@ -29,64 +29,46 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 	@Autowired
 	private MultipleBankTransactionRepo multiBankTrRepo;
 	
-	public String trMyBankToAnotherBank(String accountNo  , MultiBankTransactionDTO mDto ) throws Exception 
-	{
-		
-		Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accountNo);
-//		TransferInDiffBanks multiBankTr = new TransferInDiffBanks();
-		TransactionEntity transactionEntity =  new TransactionEntity();
-		Wallet wallet = byAccountNo.get();
-		if (byAccountNo.isEmpty()) {
-			throw new NoSuchElementException("ACCOUNT NUMBER " + accountNo +" IS NOT VALID PLEASE CHECK AGAIN...!!");	
-		}
-		
-		Double currentBalance = wallet.getBalance();
-		Double transferAmount = mDto.getSendMoney();
-		if (currentBalance<=transferAmount) {
-			transactionEntity.setTRstatus("FAILED");
-			transactionEntity.setTRname("Withdraw");
-			transactionEntity.setTRaccountNo(mDto.getReceiverBankAc());
-			transactionEntity.setTRbalance(mDto.getSendMoney());
-			transactionEntity.setTRaccountType(wallet.getAccountType());
-			transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
-			transactionEntity.setTRsenderAccountNo(wallet.getAccountNo());
-			transactionEntity.setTRdescription(CommonResponse.INSUFIECIENT_BALANCE + wallet.getBalance() + "Rs.");
-			tRepo.save(transactionEntity);
-			throw new Error(CommonResponse.INSUFIECIENT_BALANCE + wallet.getBalance() + "Rs.");
-		}
-		wallet.setBalance(wallet.getBalance() - mDto.getSendMoney());
-		
-	
-//		
-//		multiBankTr.setSenderBankAc(wallet.getAccountNo());
-//		multiBankTr.setReceiverBankAc(multiBankTrDTO.getReceiverBankAc());
-//		multiBankTr.setMultitransactionAmount(multiBankTrDTO.getSendMoney());
-//		multiBankTr.setTransactionTime(CommonResponse.DateTimeFormatter());
-//		multiBankTr.setDescription(response);
-//		multiBankTrRepo.save(multiBankTr);
+	public String trMyBankToAnotherBank(String accountNo, MultiBankTransactionDTO mDto) throws Exception {
+	    Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accountNo);
+	    if (byAccountNo.isEmpty()) {
+	        throw new NoSuchElementException("ACCOUNT NUMBER " + accountNo + " IS NOT VALID PLEASE CHECK AGAIN...!!");
+	    }
 
-		transactionEntity.setTRname("Withdraw");
-		transactionEntity.setTRaccountNo(mDto.getReceiverBankAc());
-		transactionEntity.setTRbalance(mDto.getSendMoney());
-		transactionEntity.setTRaccountType(wallet.getAccountType());
-		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
-		transactionEntity.setTRsenderAccountNo(wallet.getAccountNo());
-		String response = " YOUR AC " 
-				+ wallet.getAccountNo()
-				+ " IS DEBITED BY "
-				+ mDto.getSendMoney() 
-				+" ON "
-				+ CommonResponse.DateTimeFormatter()
-				+ " YOUR ACCOUNT BALANCE IS "
-				+wallet.getBalance() + " RS.";
-		transactionEntity.setTRdescription(response);
-		walletRepo.save(wallet);
-		
-		tRepo.save(transactionEntity);
-		
-		
-		return response;
+	    Wallet wallet = byAccountNo.get();
+	    Double currentBalance = wallet.getBalance();
+	    Double transferAmount = mDto.getSendMoney();
+
+	    TransactionEntity transactionEntity = new TransactionEntity();
+	    transactionEntity.setTRname("Withdraw");
+	    transactionEntity.setTRaccountNo(mDto.getReceiverBankAc());
+	    transactionEntity.setTRbalance(transferAmount);
+	    transactionEntity.setTRaccountType(wallet.getAccountType());
+	    transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
+	    transactionEntity.setTRsenderAccountNo(wallet.getAccountNo());
+
+	    if (currentBalance <= transferAmount) {
+	        transactionEntity.setTRstatus("FAILED");
+	        transactionEntity.setTRdescription(CommonResponse.INSUFIECIENT_BALANCE + wallet.getBalance() + "Rs.");
+	        tRepo.save(transactionEntity);
+	        throw new Exception(CommonResponse.INSUFIECIENT_BALANCE + wallet.getBalance() + "Rs.");
+	    }
+
+	    wallet.setBalance(currentBalance - transferAmount);
+	    transactionEntity.setTRstatus("SUCCESS");
+	    
+	    String response = "YOUR AC " + wallet.getAccountNo() + " IS DEBITED BY " + transferAmount 
+	                      + " ON " + CommonResponse.DateTimeFormatter() + " YOUR ACCOUNT BALANCE IS " 
+	                      + wallet.getBalance() + " RS.";
+	    
+	    transactionEntity.setTRdescription(response);
+
+	    walletRepo.save(wallet);
+	    tRepo.save(transactionEntity);
+
+	    return response;
 	}
+
 	
 /*******************************************************[DEPOSITE FROM ANOTHER ACCOUNT ]*******************************************************************************/	
 	
@@ -97,9 +79,10 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 		Wallet wallet = byAccountNo.get();
 		TransactionEntity transactionEntity = new TransactionEntity();
 		if (byAccountNo.isEmpty()) {
+			transactionEntity.setTRstatus("Failed");
 			throw new NoSuchElementException("ACCOUNT NUMBER - " +  accountNo +" IS IN VALID PLEASE CHECK. ");
 		}
-
+	
 		wallet.setBalance(wallet.getBalance() +  mDto.getReceiveMoney());
 		transactionEntity.setTRaccountNo(wallet.getAccountNo());
 		transactionEntity.setTRbalance(mDto.getReceiveMoney());
