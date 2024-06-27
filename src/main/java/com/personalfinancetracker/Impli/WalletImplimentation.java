@@ -125,47 +125,42 @@ public String DepositeMoney(String accontNumber , TransactionDTO money) {
 	
 /**************************************************************** [ WITHDRAW  CASH MONEY ] **********************************************************************/
 @Override
-public String WithDrawMoney(String accontNumber , TransactionDTO money) {
-	
-	 Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accontNumber);
-	if (byAccountNo.isEmpty()) {
-		throw new NoSuchElementException("ACCOUNT NUMBER " + accontNumber +" IS NOT VALID PLEASE CHECK AGAIN...!!");
-	}
-		
-		
-		Wallet wallet = byAccountNo.get();
-		TransactionEntity transactionEntity =  new TransactionEntity();
-		
-		String response	= money.getBankWithDraw() +  CommonResponse.WALLET_WITHDRAW + wallet.getAccountNo() + " Your Account Balance Is " + wallet.getBalance();	
-		double availableBalance =  wallet.getBalance();
-		double withDrawAmoubt = money.getBankWithDraw();
-		
-		if (availableBalance <= withDrawAmoubt) {
-			transactionEntity.setTRstatus("FAILD");
-			String errorMessage = "Bank Account Number " + wallet.getAccountNo() + " Don't Have sufficient Balance Your Account Balance is  "+ wallet.getBalance();
-			transactionEntity.setTRdescription(errorMessage);
-			System.err.println("IF PART--->");
-		throw new Error("Bank Account Number " + wallet.getAccountNo() + " Don't Have sufficient Balance Your Account Balance is  "+ wallet.getBalance());
-		}
-		else {		
-			System.err.println("ElSE PART ---> ");
-			transactionEntity.setTRstatus("Succsess");
-			wallet.setBalance(wallet.getBalance() -  money.getBankWithDraw());
-			transactionEntity.setTRname("WITHDRAW");
-			transactionEntity.setTRsenderAccountNo("CASH");
-			transactionEntity.setTRaccountNo(wallet.getAccountNo());
-			transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
-			transactionEntity.setTRaccountType(wallet.getAccountType());
-			transactionEntity.setTRbalance(money.getBankWithDraw());
-			transactionEntity.setTRdescription(response);
-			System.err.println("TRANSACTION ENTITY " + transactionEntity);
-		}
-			
-		transactionRepo.save(transactionEntity);
-		walletRepo.save(wallet);
-		return response;
-	
-}
+public String WithDrawMoney(String accountNumber, TransactionDTO money) {
+    Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accountNumber);
+    if (byAccountNo.isEmpty()) {
+        throw new NoSuchElementException("ACCOUNT NUMBER " + accountNumber + " IS NOT VALID PLEASE CHECK AGAIN...!!");
+    }
 
+    Wallet wallet = byAccountNo.get();
+    double availableBalance = wallet.getBalance();
+    double withdrawAmount = money.getBankWithDraw();
+
+    TransactionEntity transactionEntity = new TransactionEntity();
+    transactionEntity.setTRname("WITHDRAW");
+    transactionEntity.setTRsenderAccountNo("CASH");
+    transactionEntity.setTRaccountNo(wallet.getAccountNo());
+    transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
+    transactionEntity.setTRaccountType(wallet.getAccountType());
+    transactionEntity.setTRbalance(withdrawAmount);
+
+    if (availableBalance < withdrawAmount) { // Changed to '<' to avoid exact balance edge case
+        String errorMessage = "Bank Account Number " + wallet.getAccountNo() + " Don't Have sufficient Balance. Your Account Balance is " + wallet.getBalance();
+        transactionEntity.setTRstatus("FAILED");
+        transactionEntity.setTRdescription(errorMessage);
+        transactionRepo.save(transactionEntity);
+        throw new Error(errorMessage);
+    }
+
+    wallet.setBalance(availableBalance - withdrawAmount);
+    String response = withdrawAmount + CommonResponse.WALLET_WITHDRAW + wallet.getAccountNo() + " Your Account Balance Is " + wallet.getBalance();
+    
+    transactionEntity.setTRstatus("SUCCESS");
+    transactionEntity.setTRdescription(response);
+    
+    walletRepo.save(wallet);
+    transactionRepo.save(transactionEntity);
+
+    return response;
+}
 	
 }
