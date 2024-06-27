@@ -29,6 +29,9 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 	@Autowired
 	private MultipleBankTransactionRepo multiBankTrRepo;
 	
+/***********************************[THIS FUNCTION IS FOR YOU CAN TRANSFER MONEY FROM YOUR TO  DIFFRENT ACCOUNT]*****************************************************************************/
+	
+	
 	public String trMyBankToAnotherBank(String accountNo, MultiBankTransactionDTO mDto) throws Exception {
 	    Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accountNo);
 	    if (byAccountNo.isEmpty()) {
@@ -46,6 +49,7 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 	    transactionEntity.setTRaccountType(wallet.getAccountType());
 	    transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
 	    transactionEntity.setTRsenderAccountNo(wallet.getAccountNo());
+	    transactionEntity.setWalletId(wallet.getId());
 
 	    if (currentBalance <= transferAmount) {
 	        transactionEntity.setTRstatus("FAILED");
@@ -89,6 +93,7 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 		transactionEntity.setTRsenderAccountNo(mDto.getSenderBankAc());
 		transactionEntity.setTRaccountType(wallet.getAccountType());
 		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
+		transactionEntity.setWalletId(wallet.getId());
 		
 		String response = " YOUR AC " 
 				+ wallet.getAccountNo()

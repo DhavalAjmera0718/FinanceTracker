@@ -41,6 +41,9 @@ public class TransactionEntity {
 	
 	private String transactionTime;
 	
+	 @Column(name = "BankID1")
+	  private Long walletId;
+	
 
 
 }

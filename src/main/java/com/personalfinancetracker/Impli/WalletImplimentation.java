@@ -1,5 +1,6 @@
 package com.personalfinancetracker.Impli;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -100,6 +101,7 @@ public String DepositeMoney(String accontNumber , TransactionDTO money) {
 		TransactionEntity transactionEntity =  new TransactionEntity();
 		transactionEntity.setTRname("Deposite");
 		transactionEntity.setTRstatus("Succsess");
+		transactionEntity.setWalletId(wallet.getId());
 		transactionEntity.setTRsenderAccountNo("CASH");
 		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
 		transactionEntity.setTRaccountNo(wallet.getAccountNo());
@@ -142,6 +144,7 @@ public String WithDrawMoney(String accountNumber, TransactionDTO money) {
     transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
     transactionEntity.setTRaccountType(wallet.getAccountType());
     transactionEntity.setTRbalance(withdrawAmount);
+    transactionEntity.setWalletId(wallet.getId());
 
     if (availableBalance < withdrawAmount) { // Changed to '<' to avoid exact balance edge case
         String errorMessage = "Bank Account Number " + wallet.getAccountNo() + " Don't Have sufficient Balance. Your Account Balance is " + wallet.getBalance();
@@ -162,5 +165,13 @@ public String WithDrawMoney(String accountNumber, TransactionDTO money) {
 
     return response;
 }
-	
+/*******************************************************[GET TRANSACTION BY BANK ID ]**************************************************************************/	
+
+	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) 
+	{
+		List<TransactionEntity> byWalletId = transactionRepo.findByWalletId(bankId);
+		return byWalletId;
+	}
+
+
 }

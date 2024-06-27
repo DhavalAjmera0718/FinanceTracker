@@ -1,5 +1,7 @@
 package com.personalfinancetracker.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.personalfinancetracker.Service.MultipleBankTransactionService;
 import com.personalfinancetracker.Service.WalletService;
+import com.personalfinancetracker.enity.TransactionEntity;
 import com.personalfinancetracker.proxy.MultiBankTransactionDTO;
 import com.personalfinancetracker.proxy.TransactionDTO;
 import com.personalfinancetracker.proxy.WalletProxy;
@@ -107,6 +110,15 @@ public ResponseEntity<String> DepositesFromAnotherAccount(@PathVariable("account
 	return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
 }
+
+@GetMapping("getDataByTransactionEntity/{bankId}")
+public ResponseEntity<List<TransactionEntity>>  getDataByTransactionEntity(@PathVariable("bankId") Long bankId) 
+{
+	return new ResponseEntity<List<TransactionEntity>>(service.getDataByTransactionEntity(bankId) , HttpStatus.OK);
+}
+
+
+
 }
 
 

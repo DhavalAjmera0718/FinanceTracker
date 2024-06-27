@@ -28,7 +28,7 @@ public class CommonResponse {
 	
 	
 /********************************************************[RANDOM STRING GENRATOR ]****************************************************************************/	
-	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	private static final String CHARACTERS = "0123456789";
 	  private static final SecureRandom RANDOM = new SecureRandom();
 	  private static final String BANK_CODE = "PUNB";
 
