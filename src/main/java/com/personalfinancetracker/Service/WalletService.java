@@ -28,7 +28,9 @@ public interface WalletService {
 	
 	public String WithDrawMoney(String accontNumber , TransactionDTO money) ;
 	
-	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) ;
+//	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) ;
+	
+	public List<TransactionDTO>  getDataByTransactionEntity(Long bankId) ;
 	
 	
 }

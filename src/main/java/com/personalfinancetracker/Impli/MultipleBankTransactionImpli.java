@@ -93,6 +93,7 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 		transactionEntity.setTRsenderAccountNo(mDto.getSenderBankAc());
 		transactionEntity.setTRaccountType(wallet.getAccountType());
 		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
+		transactionEntity.setTRstatus("SUCCESS");
 		transactionEntity.setWalletId(wallet.getId());
 		
 		String response = " YOUR AC " 

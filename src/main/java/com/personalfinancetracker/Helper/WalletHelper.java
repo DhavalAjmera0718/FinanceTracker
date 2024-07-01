@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.personalfinancetracker.enity.TransactionEntity;
 import com.personalfinancetracker.enity.Wallet;
+import com.personalfinancetracker.proxy.TransactionDTO;
 import com.personalfinancetracker.proxy.WalletProxy;
 
 @Component
@@ -25,6 +27,10 @@ public class WalletHelper {
 	{
 		return objectMapper.convertValue(wallet, WalletProxy.class);
 	}	
+	
+	public TransactionDTO ConvertEntity_To_DTOTransaction(TransactionEntity entity){
+		return objectMapper.convertValue(entity, TransactionDTO.class);
+	}
 	
 	
 }

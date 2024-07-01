@@ -1,5 +1,6 @@
 package com.personalfinancetracker.Impli;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -89,12 +90,15 @@ public class WalletImplimentation implements WalletService {
 public String DepositeMoney(String accontNumber , TransactionDTO money) {
 	
 	 Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accontNumber);
-	
+	System.out.println("by"+byAccountNo);
 	
 	 if (byAccountNo.isPresent()) {
 		
 		Wallet wallet = byAccountNo.get();
-		wallet.setBalance(wallet.getBalance() +  money.getBankDeposite());
+		System.out.println("mobefore"+money.getBankDeposite());
+		Double double1= money.getBankDeposite();
+		System.out.println("After"+double1);
+		wallet.setBalance(wallet.getBalance() +  double1);
 		
 		walletRepo.save(wallet);
 		
@@ -167,11 +171,23 @@ public String WithDrawMoney(String accountNumber, TransactionDTO money) {
 }
 /*******************************************************[GET TRANSACTION BY BANK ID ]**************************************************************************/	
 
-	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) 
-	{
-		List<TransactionEntity> byWalletId = transactionRepo.findByWalletId(bankId);
-		return byWalletId;
+//	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) 
+//	{
+//		List<TransactionEntity> byWalletId = transactionRepo.findByWalletId(bankId);
+//		return byWalletId;
+//	}
+public List<TransactionDTO>  getDataByTransactionEntity(Long bankId) 
+{
+	List<TransactionDTO> dtos = new ArrayList<>();
+	List<TransactionEntity> byWalletId = transactionRepo.findByWalletId(bankId);
+	for(TransactionEntity one : byWalletId) {
+		TransactionDTO convertEntity_To_DTOTransaction = walletHelper.ConvertEntity_To_DTOTransaction(one);
+		dtos.add(convertEntity_To_DTOTransaction);
 	}
+	
+	
+	return dtos;
+}
 
 
 }
