@@ -13,5 +13,7 @@ public interface WalletRepo extends JpaRepository<Wallet, Long>{
 	
 	
 	Optional<Wallet> findByAccountNo(String accountNo);
+	
+	Optional<Wallet> findByAdharNumber(String adharNumber);
 
 }

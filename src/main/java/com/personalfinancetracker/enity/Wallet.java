@@ -30,6 +30,7 @@ public class Wallet {
 	private String accountNo;
 	private String accountType;
 	private Double balance;
+	private String adharNumber;
 	
 	@OneToMany(targetEntity = TransactionEntity.class)
 	@Cascade(CascadeType.ALL)

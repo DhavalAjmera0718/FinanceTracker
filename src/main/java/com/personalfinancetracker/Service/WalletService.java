@@ -31,4 +31,6 @@ public interface WalletService {
 	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) ;
 	
 	
+	
+	
 }

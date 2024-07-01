@@ -2,13 +2,15 @@ package com.personalfinancetracker.Helper;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class CommonResponse {
+public class CommonResponse  implements PasswordEncoder {
 	
 	
 	public static final String WALLET_DATA_SAVE_RESPONSE =  "WALLET DATA HASE BEEN SAVED....!!";
@@ -50,9 +52,19 @@ public class CommonResponse {
 		  
 		  DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 		  
-		   return nowDateTime.format(formatter);
-		  
-		  
+		   return nowDateTime.format(formatter); 
 	  }
+/**********************************************************************************************************************************/
+@Override
+public String encode(CharSequence rawPassword) {
+	
+	return DigestUtils.md5DigestAsHex(rawPassword.toString().getBytes());
+}
+@Override
+public boolean matches(CharSequence rawPassword, String encodedPassword) {
+	// TODO Auto-generated method stub
+	return false;
+}
+
 	
 }
