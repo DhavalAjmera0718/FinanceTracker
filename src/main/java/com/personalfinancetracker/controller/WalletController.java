@@ -94,7 +94,7 @@ public ResponseEntity<String> withDrawMoney(@PathVariable("accontNumber") String
 public ResponseEntity<String> trMyBankToAnotherBank(@PathVariable("accountNo") String accountNo  ,@RequestBody MultiBankTransactionDTO multiBankTrDTO ) throws Exception 
 {
 	if (accountNo!=null) {
-		return new ResponseEntity<String>(multiSevice.trMyBankToAnotherBank(accountNo, multiBankTrDTO), HttpStatus.OK);
+		return new ResponseEntity<String>(multiSevice.trMyBankToAnotherBank(accountNo, multiBankTrDTO), HttpStatus.ACCEPTED);
 	}
 	return new ResponseEntity<String>("PLEASE CHECK YOUR BANK ACCOUNT NUMBER " ,  HttpStatus.BAD_REQUEST);
 }
