@@ -6,7 +6,11 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.personalfinancetracker.Helper.CommonResponse;
 import com.personalfinancetracker.Helper.WalletHelper;
@@ -31,17 +35,46 @@ public class WalletImplimentation implements WalletService {
 	@Autowired
 	private TransactionRepo transactionRepo;
 	
+	@Autowired
+	private CommonResponse commonResponse;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	@Override
 	public String SaveWalletData(WalletProxy walletProxy) 
 	{
+		
+		HttpEntity<WalletProxy> walledProxy = new HttpEntity<>(walletProxy); 
+		
+		
+		String body = restTemplate.exchange("http://localhost:8080/adhar/saveAdharData", HttpMethod.POST, walledProxy, String.class).getBody();
+		
+		System.err.println("BODY BEFORE SAVE IN WALLET TABEL ---> " + body);
 			String randomString = CommonResponse.generateRandomString();
-			System.err.println("RANDOM STRING FOR BANK ACCOUNT------> " + randomString);
+			
+			String encryptedAdhar = restTemplate.exchange("http://localhost:8080/adhar/getEncryptedRef/"+walletProxy.getAdharNumber(),
+					HttpMethod.GET, 
+					walledProxy, 
+					String.class).getBody();
+			
+			Optional<Wallet> byAdharNumber = walletRepo.findByAdharNumber(encryptedAdhar);
+			if (byAdharNumber.isPresent()) {
+				throw new RuntimeException("ADHAR NUMBER IS ALREADY REGISTERED..!!");
+			}
+			
+			System.err.println("ENCRYPTED ADHAR FROM REST TEMPLATE----> " + encryptedAdhar);
+			
+			walletProxy.setAdharNumber(encryptedAdhar);
 			walletProxy.setAccountNo(randomString);
 			
 			Wallet mainEntityData = walletHelper.ConvertDTO_To_Entity(walletProxy);
 			walletRepo.save(mainEntityData);
 			
-			return CommonResponse.WALLET_DATA_SAVE_RESPONSE;
+			return CommonResponse.WALLET_DATA_SAVE_RESPONSE + body;
 	}
 	
 	@Override
@@ -104,7 +137,7 @@ public String DepositeMoney(String accontNumber , TransactionDTO money) {
 		
 		TransactionEntity transactionEntity =  new TransactionEntity();
 		transactionEntity.setTRname("Deposite");
-		transactionEntity.setTRstatus("Succsess");
+		transactionEntity.setTRstatus("SUCCESS");
 		transactionEntity.setWalletId(wallet.getId());
 		transactionEntity.setTRsenderAccountNo("CASH");
 		transactionEntity.setTransactionTime(CommonResponse.DateTimeFormatter());
