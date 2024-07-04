@@ -31,11 +31,16 @@ public class Wallet {
 	private String accountType;
 	@Min(1000)
 	private Double balance;
+	
 	private String adharNumber;
 	
-	@OneToMany(targetEntity = TransactionEntity.class)
-	@Cascade(CascadeType.ALL)
-	@JoinColumn(name = "BankID" , referencedColumnName = "id")
-	private List<TransactionEntity> transactionEntities;
+	private String matchedId;
+	
+	private String bank;
+//	
+//	@OneToMany(targetEntity = TransactionEntity.class)
+//	@Cascade(CascadeType.ALL)
+//	@JoinColumn(name = "BankID" , referencedColumnName = "id")
+//	private List<TransactionEntity> transactionEntities;
 	
 }

@@ -53,25 +53,36 @@ public class WalletImplimentation implements WalletService {
 		
 		String body = restTemplate.exchange("http://localhost:8080/adhar/saveAdharData", HttpMethod.POST, walledProxy, String.class).getBody();
 		
-		System.err.println("BODY BEFORE SAVE IN WALLET TABEL ---> " + body);
 			String randomString = CommonResponse.generateRandomString();
+			System.err.println("<-------- 11111111111111 -----------------> ");
 			
 			String encryptedAdhar = restTemplate.exchange("http://localhost:8080/adhar/getEncryptedRef/"+walletProxy.getAdharNumber(),
 					HttpMethod.GET, 
 					walledProxy, 
 					String.class).getBody();
+			System.err.println("<--------    22222222222    -----------------> ");
+			String getMatchIdFromRestTemplate = restTemplate.exchange("http://localhost:8080/adhar/getMatchid/"+walletProxy.getAdharNumber(), 
+					HttpMethod.GET,
+					walledProxy,
+					String.class).getBody(); 
+			System.err.println("<--------     3333333333333     -----------------> ");
 			
 			Optional<Wallet> byAdharNumber = walletRepo.findByAdharNumber(encryptedAdhar);
-			if (byAdharNumber.isPresent()) {
+			System.err.println("XXXXXXXXXXXXXXXXXXX");
+			Optional<Wallet> byBank = walletRepo.findByBank(walletProxy.getBank());
+			System.err.println("<--------     4444444444444444       -----------------> ");
+			
+			if (byAdharNumber.isPresent() && byBank.isPresent()) {
 				throw new RuntimeException("ADHAR NUMBER IS ALREADY REGISTERED..!!");
 			}
-			
+			System.err.println("<--------   55555555555         -----------------> ");
 			System.err.println("ENCRYPTED ADHAR FROM REST TEMPLATE----> " + encryptedAdhar);
-			
+			walletProxy.setMatchedId(getMatchIdFromRestTemplate);
 			walletProxy.setAdharNumber(encryptedAdhar);
 			walletProxy.setAccountNo(randomString);
-			
+			System.err.println("<--------       66666666666   ----------------> ");
 			Wallet mainEntityData = walletHelper.ConvertDTO_To_Entity(walletProxy);
+			System.err.println("<--------    777777777777777        -----------------> ");
 			walletRepo.save(mainEntityData);
 			
 			return CommonResponse.WALLET_DATA_SAVE_RESPONSE + body;

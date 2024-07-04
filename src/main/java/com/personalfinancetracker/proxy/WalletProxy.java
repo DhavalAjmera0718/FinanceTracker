@@ -21,4 +21,8 @@ public class WalletProxy {
 	@Min(12)
 	@Max(12)
 	private String adharNumber;
+	
+	private String matchedId;
+	
+	private String bank;
 }
