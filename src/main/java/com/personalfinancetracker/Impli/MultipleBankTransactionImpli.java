@@ -1,5 +1,6 @@
 package com.personalfinancetracker.Impli;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 /***********************************[THIS FUNCTION IS FOR YOU CAN TRANSFER MONEY FROM YOUR TO  DIFFRENT ACCOUNT]*****************************************************************************/
 	
 	
-	public String trMyBankToAnotherBank(String accountNo, MultiBankTransactionDTO mDto) throws Exception {
+	public String trMyBankToAnotherBank(String accountNo, MultiBankTransactionDTO mDto,Map<String, String> headerData) throws Exception {
 	    Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accountNo);
 	    if (byAccountNo.isEmpty()) {
 	        throw new NoSuchElementException("ACCOUNT NUMBER " + accountNo + " IS NOT VALID PLEASE CHECK AGAIN...!!");
@@ -76,7 +77,7 @@ public class MultipleBankTransactionImpli implements MultipleBankTransactionServ
 	
 /*******************************************************[DEPOSITE FROM ANOTHER ACCOUNT ]*******************************************************************************/	
 	
-	public String DepositesFromAnotherAccount(String accountNo ,  MultiBankTransactionDTO mDto) 
+	public String DepositesFromAnotherAccount(String accountNo ,  MultiBankTransactionDTO mDto,Map<String, String> headerData) 
 	{
 		
 		Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accountNo);
