@@ -40,9 +40,7 @@ public class WalletController {
 		return new ResponseEntity<String>("Please Check Your Data ....!!!" , HttpStatus.BAD_REQUEST);
 	}
 
-	/******************************************************
-	 * [WALLET GET BY ID ]
-	 ***************************************************************************/
+	/******************************************************* [WALLET GET BY ID ]***************************************************************************/
 	@GetMapping("/getWalletDataByid/{id}")
 	public ResponseEntity<WalletProxy> GetWalletDataByID(@PathVariable("id") Long id,@RequestHeader Map<String, String> headerdata) throws Exception {
 		if (id != null) {
@@ -52,9 +50,7 @@ public class WalletController {
 		throw new Exception();
 	}
 
-	/********************************************************
-	 * [DELET WALLET DATA BY ID ]
-	 ****************************************************************************************************/
+	/******************************************************** * [DELET WALLET DATA BY ID ]****************************************************************************************************/
 	@PostMapping("deleteDataById/{id}")
 	public ResponseEntity<String> DeleteWalletData(@PathVariable("id") Long id,@RequestHeader Map<String, String> headerdata) throws Exception {
 		if (id != null) {
@@ -63,9 +59,7 @@ public class WalletController {
 		throw new Exception();
 	}
 
-	/**************************************************************
-	 * [UDPATE DATA BY ID ]
-	 **********************************************************************************************************/
+	/*************************************************************** [UDPATE DATA BY ID ]**********************************************************************************************************/
 	@PostMapping("updateWalletData/{id}")
 	public ResponseEntity<String> UpdateWalletData(@PathVariable Long id, @RequestBody WalletProxy walletProxy,@RequestHeader Map<String, String> headerdata)
 			throws Exception {
@@ -75,9 +69,7 @@ public class WalletController {
 		throw new Exception();
 	}
 
-	/*********************************************************************
-	 * [DEPOSITE MONEY]
-	 **************************************************************************************/
+	/********************************************************************** [DEPOSITE MONEY]**************************************************************************************/
 	@PostMapping("depositeMoney/{accontNumber}")
 	public ResponseEntity<String> DepositeMoney(@PathVariable("accontNumber") String accontNumber,
 			@RequestBody TransactionDTO money,@RequestHeader Map<String, String> headerdata) {
@@ -86,9 +78,7 @@ public class WalletController {
 
 	}
 
-	/*********************************************************************
-	 * [DEPOSITE MONEY]
-	 **************************************************************************************/
+	/********************************************************************* * [DEPOSITE MONEY]**************************************************************************************/
 	@PostMapping("withDrawMoney/{accontNumber}")
 	public ResponseEntity<String> withDrawMoney(@PathVariable("accontNumber") String accontNumber,
 			@RequestBody TransactionDTO money,@RequestHeader Map<String, String> headerdata) {
@@ -96,9 +86,7 @@ public class WalletController {
 
 	}
 
-	/*************************************************************
-	 * [ MONEY TRANSFER MY WALLET TO DIFFRENT BANK]
-	 ****************************************************************************/
+	/************************************************************** [ MONEY TRANSFER MY WALLET TO DIFFRENT BANK]****************************************************************************/
 	@PostMapping("myWalletToDiffWallet/{accountNo}")
 	public ResponseEntity<String> trMyBankToAnotherBank(@PathVariable("accountNo") String accountNo,
 			@RequestBody MultiBankTransactionDTO multiBankTrDTO,@RequestHeader Map<String, String> headerdata) throws Exception {
@@ -109,9 +97,7 @@ public class WalletController {
 		return new ResponseEntity<String>("PLEASE CHECK YOUR BANK ACCOUNT NUMBER ", HttpStatus.BAD_REQUEST);
 	}
 
-	/*******************************************************
-	 * [DEPOSITE FROM ANOTHER ACCOUNT ]
-	 *******************************************************************************/
+	/******************************************************* * [DEPOSITE FROM ANOTHER ACCOUNT ] *******************************************************************************/
 	@PostMapping("DepositesFromAnotherAccount/{accountNo}")
 	public ResponseEntity<String> DepositesFromAnotherAccount(@PathVariable("accountNo") String accountNo,
 			@RequestBody MultiBankTransactionDTO mDto,@RequestHeader Map<String, String> headerdata) {
