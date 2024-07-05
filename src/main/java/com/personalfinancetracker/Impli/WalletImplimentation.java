@@ -75,7 +75,7 @@ public class WalletImplimentation implements WalletService {
 
 	public String SaveWalletData(WalletProxy walletProxy, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
-		if (validateOrNot == false) {
+		if (validateOrNot == true) {
 			HttpEntity<WalletProxy> walledProxy = new HttpEntity<>(walletProxy);
 
 			String body = restTemplate

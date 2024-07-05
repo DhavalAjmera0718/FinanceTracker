@@ -116,6 +116,7 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 			 PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfBytes));
 	            PDFTextStripper pdfStripper = new PDFTextStripper();
 	            String pdfText = pdfStripper.getText(document);
+	            System.err.println("TEXT -------- >  " + pdfText);
 	            document.close();
 	            
 	            HtmlFormat htmlFormatFromDB3 = htmlTemplateRepo.findById(3L).get();
@@ -132,11 +133,11 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 	            
 	            // Replace placeholders in the HTML template
 	            for (Map.Entry<String, String> entry : walletData.entrySet()) {
-	                htmlCertificateTemplate3 = htmlCertificateTemplate3.replace("{{" + entry.getKey() + "}}", entry.getValue());
+	                htmlCertificateTemplate3 = htmlCertificateTemplate3.replace("{{" + entry.getKey() + "}}" , entry.getKey());
 	            }
 
 	            // Replace a specific placeholder with the extracted PDF text
-	            htmlCertificateTemplate3 = htmlCertificateTemplate3.replace("{{PDF_CONTENT}}", pdfText);
+//	            htmlCertificateTemplate3 = htmlCertificateTemplate3.replace("{{PDF_CONTENT}}", pdfText);
 	            
 //	            String modiFiedHTml = htmlCertificateTemplate.replace(htmlCertificateTemplate3, pdfText);
 	            
