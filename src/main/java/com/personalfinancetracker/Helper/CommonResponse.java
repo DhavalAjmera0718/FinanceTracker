@@ -28,6 +28,9 @@ public class CommonResponse  implements PasswordEncoder {
 	
 	public static final String PDF_FILE_PATH = "../PersonalFinanceTracker/src/main/resources/templates/converter.pdf";
 	
+	
+	public static final String CONVERT_PDF_INTO_1_PAGE = "../PersonalFinanceTracker/src/main/resources/templates/merged.pdf";
+	
 	public static final String HTML_TEMPLATE_OF_UAP_CERTIFICATE1="""
 	          <html lang="en">
 <head>

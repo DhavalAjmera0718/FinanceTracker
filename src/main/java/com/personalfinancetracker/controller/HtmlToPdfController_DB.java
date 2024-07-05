@@ -160,5 +160,25 @@ public class HtmlToPdfController_DB {
 	    
 	    return doc.outerHtml();
 	}
+/**********************************************************[DYNAMIC PDF CONVERTER]************************************************************************/	
+	
+	@PostMapping("/merge")
+    public ResponseEntity<byte[]> mergePdfs(@RequestParam("file") MultipartFile file) {
+      
+        	  try {
+                  byte[] mergedPdf = htmlService.mergePdfs(file);
+
+                  HttpHeaders headers = new HttpHeaders();
+                  headers.setContentType(MediaType.APPLICATION_PDF);
+                  headers.setContentDispositionFormData("attachment", "merged.pdf");
+
+                  return new ResponseEntity<>(mergedPdf, headers, HttpStatus.OK);
+              } catch (IOException e) {
+                  e.printStackTrace();
+                  return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+              }
+          
+    }
+	
 	
 }
