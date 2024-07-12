@@ -150,6 +150,17 @@
 			<artifactId>html2pdf</artifactId>
 			<version>5.0.3</version>
 		</dependency>
+		<!--<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>io</artifactId>
+			<version>7.1.14</version>
+		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/commons -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>commons</artifactId>
+			<version>7.2.4</version>
+		</dependency>
 
 
 	</dependencies>

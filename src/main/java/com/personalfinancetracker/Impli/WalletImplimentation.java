@@ -75,12 +75,14 @@ public class WalletImplimentation implements WalletService {
 
 	public String SaveWalletData(WalletProxy walletProxy, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
+		System.err.println("HEADER FROM WALLET IMPLI ----> || " + headerData);
 		if (validateOrNot == true) {
 			HttpEntity<WalletProxy> walledProxy = new HttpEntity<>(walletProxy);
 
 			String body = restTemplate
 					.exchange("http://localhost:8080/adhar/saveAdharData", HttpMethod.POST, walledProxy, String.class)
 					.getBody();
+			System.err.println("1111111111");
 
 			System.err.println("BODY BEFORE SAVE IN WALLET TABEL ---> " + body);
 			String randomString = CommonResponse.generateRandomString();

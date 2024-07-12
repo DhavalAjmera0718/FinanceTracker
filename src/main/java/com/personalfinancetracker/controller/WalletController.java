@@ -35,6 +35,7 @@ public class WalletController {
 	{
 		if (walletProxy!=null &&  walletProxy.getBalance()>=5000.00 && walletProxy.getAccountType().equals("Current")
 				|| walletProxy!=null &&  walletProxy.getBalance()>=1000.00 && walletProxy.getAccountType().equals("Saving")) {
+			System.err.println("HEADER FROM WALLET CONTROLLER---> " + headerdata);
 			return new ResponseEntity<String>(service.SaveWalletData(walletProxy,headerdata),HttpStatus.CREATED);
 		}
 		return new ResponseEntity<String>("Please Check Your Data ....!!!" , HttpStatus.BAD_REQUEST);

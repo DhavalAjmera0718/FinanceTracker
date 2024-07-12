@@ -20,8 +20,8 @@ public class TokenCheck {
 	public Boolean validateOrNot(Map<String, String> headerData) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		
-		System.err.println(">>>>>>>>>>>>>>>>"+headerData.get("authorization"));
-		httpHeaders.set("Authorization", headerData.get("authorization"));
+		System.err.println(">>>>>>>>>>>>>>>> HEADER  "+headerData.get("authorization"));
+		httpHeaders.set("authorization", headerData.get("authorization"));
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Object> httpEntity = new HttpEntity<>(null, httpHeaders);
 		Boolean body = restTemplate.exchange("http://localhost:8888/auth/verifyToken",HttpMethod.GET,httpEntity,Boolean.class).getBody();

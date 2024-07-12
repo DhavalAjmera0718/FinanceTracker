@@ -28,7 +28,11 @@ import com.personalfinancetracker.Repo.WalletRepo;
 import com.personalfinancetracker.Service.HtmlTemplateService;
 import com.personalfinancetracker.enity.HtmlFormat;
 import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.ITextExtractionStrategy;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.SimpleTextExtractionStrategy;
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.kernel.utils.PdfMerger;
 
@@ -170,6 +174,7 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 	}
 	
 /********************************************************[ DYNAMIC PDF CONVERTER ]************************************************************************/	
+	
 	 public byte[] mergePdfs(MultipartFile file) throws IOException {
 	        // Create a new PDF document for the result
 		
@@ -203,10 +208,6 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 		    // Read content from the provided PDF
 		    byte[] pdfBytes = file.getBytes();
 		    PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(new ByteArrayInputStream(pdfBytes)));
-		    
-//		    ConverterProperties converterProperties =  new ConverterProperties();
-//		    converterProperties.setCreateAcroForm(true);
-//		    HtmlConverter.conve
 
 		    // Check if the input PDF has exactly two pages
 		    if (inputPdfDoc.getNumberOfPages() != 2) {
@@ -215,7 +216,7 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 
 		    // Variables to track total content height
 		    float totalContentHeight = 0;
-
+		    boolean footerFound = false;
 		    // Scale and add content of both pages to the single page in the new PDF
 		    for (int i = 1; i <= inputPdfDoc.getNumberOfPages(); i++) {
 		        PdfPage page = inputPdfDoc.getPage(i);
@@ -223,6 +224,22 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 		        Image pageImage = new Image(pageCopy);
 
 		        System.err.println("PAGE IMAGE ---> " + pageImage);
+		        
+		        // Extract text content from the page
+		        ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
+		        PdfCanvasProcessor processor = new PdfCanvasProcessor(strategy);
+		        processor.processPageContent(page);
+		        String pageText = strategy.getResultantText();
+		        
+		        System.err.println("--------------------------------");
+		        System.err.println("PAGE TEXT --------> " + pageText);
+
+		        // Check for HTML footer in the page content
+		        if (pageText.contains("@msmechampions")) {
+		            footerFound = true;
+
+		        }
+		        System.err.println(footerFound);
 		        // Calculate the scaling factor based on content height
 		        float scaleFactor = (newPageHeight / 2) / originalPageHeight;
 		        
@@ -259,6 +276,7 @@ public class HtmlToPdfConvertDB_IMPLI implements HtmlTemplateService{
 		    }
 		    return outputStream.toByteArray();
 	 }
+	
 	
 }
 
