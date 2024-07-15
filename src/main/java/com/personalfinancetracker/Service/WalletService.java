@@ -15,7 +15,8 @@ public interface WalletService {
 	public String SaveWalletData(WalletProxy walletProxy,Map<String, String> headerData);
 	
 	
-	public WalletProxy GetWalletDataByID(Long id,Map<String, String> headerData) ;
+//	public WalletProxy GetWalletDataByID(Long id,Map<String, String> headerData) ;
+	public WalletProxy GetWalletDataByID(String id,Map<String, String> headerData) ;
 	
 	
 	public String DeleteWalletData(Long id,Map<String, String> headerData) ;
@@ -29,7 +30,8 @@ public interface WalletService {
 	
 //	public List<TransactionEntity>  getDataByTransactionEntity(Long bankId) ;
 	
-	public List<TransactionDTO>  getDataByTransactionEntity(Long bankId,Map<String, String> headerData) ;
+//	public List<TransactionDTO>  getDataByTransactionEntity(Long bankId,Map<String, String> headerData) ;
 	
+	public List<TransactionDTO>  getDataByTransactionEntity(String bankId,Map<String, String> headerData) ;
 	
 }

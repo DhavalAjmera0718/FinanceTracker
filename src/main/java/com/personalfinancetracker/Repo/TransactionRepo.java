@@ -11,5 +11,8 @@ public interface TransactionRepo extends JpaRepository<TransactionEntity, Long> 
 	
 	List<TransactionEntity> findByWalletId(Long walletId);
 	
+	List<TransactionEntity> findBytRaccountNo(String tRaccountNo);
+	
+	
 
 }

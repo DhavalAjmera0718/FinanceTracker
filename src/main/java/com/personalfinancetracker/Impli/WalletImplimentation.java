@@ -98,10 +98,11 @@ public class WalletImplimentation implements WalletService {
 					String.class).getBody(); 
 			Optional<Wallet> byAdharNumber = walletRepo.findByAdharNumber(encryptedAdhar);
 			System.err.println("XXXXXXXXXXXXXXXXXXX");
-			Optional<Wallet> byBank = walletRepo.findByBank(walletProxy.getBank());
+//			Optional<Wallet> byBank = walletRepo.findByBank(walletProxy.getBank());
+//			System.err.println("[ --------> " + byBank + " <--------- ] ");
 			System.err.println("<--------     4444444444444444       -----------------> ");
 			
-			if (byAdharNumber.isPresent() && byBank.isPresent()) {
+			if (byAdharNumber.isPresent() /* && byBank.isPresent() */) {
 				throw new RuntimeException("ADHAR NUMBER IS ALREADY REGISTERED..!!");
 			}
 
@@ -130,10 +131,15 @@ public class WalletImplimentation implements WalletService {
 	}
 
 	@Override
-	public WalletProxy GetWalletDataByID(Long id, Map<String, String> headerData) {
+	public WalletProxy GetWalletDataByID(String id, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
 		if (validateOrNot == true) {
-			Optional<Wallet> optionalWallet = walletRepo.findById(id);
+			String encryptedAdhar = restTemplate
+					.exchange("http://localhost:8080/adhar/getEncryptedRef/" + id,
+							HttpMethod.GET, null, String.class)
+					.getBody();
+			
+			Optional<Wallet> optionalWallet = walletRepo.findByAdharNumber(encryptedAdhar);
 
 			if (!optionalWallet.isPresent()) {
 				throw new NoSuchElementException("Wallet not found for ID: " + id);
@@ -148,9 +154,7 @@ public class WalletImplimentation implements WalletService {
 		}
 	}
 
-	/********************************************************
-	 * [DELET WALLET DATA BY ID ]
-	 ****************************************************************************************************/
+	/******************************************************** * [DELET WALLET DATA BY ID ]***************************************************************************************************/
 	@Override
 	public String DeleteWalletData(Long id, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
@@ -162,9 +166,7 @@ public class WalletImplimentation implements WalletService {
 		}
 	}
 
-	/**************************************************************
-	 * [UDPATE WALLET DATA BY ID ]
-	 **********************************************************************************************************/
+	/*************************************************************** [UDPATE WALLET DATA BY ID ] **********************************************************************************************************/
 
 	public String UpdateWalletData(Long id, WalletProxy walletProxy, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
@@ -185,23 +187,21 @@ public class WalletImplimentation implements WalletService {
 		}
 	}
 
-	/********************************************************
-	 * [ DepositeMoney BY CASH]
-	 *********************************************************************/
+	/********************************************************* [ DepositeMoney BY CASH] *********************************************************************/
 	@Override
 	public String DepositeMoney(String accontNumber, TransactionDTO money, Map<String, String> headerData) {
 
 		Boolean validateOrNot = check.validateOrNot(headerData);
 		if (validateOrNot == true) {
 			Optional<Wallet> byAccountNo = walletRepo.findByAccountNo(accontNumber);
-			System.out.println("by" + byAccountNo);
+			System.err.println("by -------> " + byAccountNo);
 
 			if (byAccountNo.isPresent()) {
 
 				Wallet wallet = byAccountNo.get();
 				System.out.println("mobefore" + money.getBankDeposite());
 				Double double1 = money.getBankDeposite();
-				System.out.println("After" + double1);
+				System.err.println("MONEY  FROM TRANSACTION DTO ----------> " + double1);
 				wallet.setBalance(wallet.getBalance() + double1);
 
 				walletRepo.save(wallet);
@@ -222,7 +222,7 @@ public class WalletImplimentation implements WalletService {
 				transactionEntity.setTRdescription(response);
 				System.err.println("TRANSACTION ENTITY " + transactionEntity);
 				transactionRepo.save(transactionEntity);
-				System.err.println(response);
+				System.err.println("RESPONSE-----> "+response);
 				return response;
 			} else {
 				return "Token Not Match";
@@ -232,9 +232,7 @@ public class WalletImplimentation implements WalletService {
 		return "ACCOUNT NOT FOUND...";
 	}
 
-	/****************************************************************
-	 * [ WITHDRAW CASH MONEY ]
-	 **********************************************************************/
+	/**************************************************************** * [ WITHDRAW CASH MONEY ]**********************************************************************/
 	@Override
 	public String WithDrawMoney(String accountNumber, TransactionDTO money, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
@@ -247,7 +245,7 @@ public class WalletImplimentation implements WalletService {
 
 			Wallet wallet = byAccountNo.get();
 			double availableBalance = wallet.getBalance();
-			double withdrawAmount = money.getBankWithDraw();
+			double withdrawAmount = money.getBankDeposite();
 
 			TransactionEntity transactionEntity = new TransactionEntity();
 			transactionEntity.setTRname("WITHDRAW");
@@ -283,15 +281,14 @@ public class WalletImplimentation implements WalletService {
 		}
 	}
 
-	/*******************************************************
-	 * [GET TRANSACTION BY BANK ID ]
-	 **************************************************************************/
+	/*******************************************************[GET TRANSACTION BY BANK ID ]**************************************************************************/
 
-	public List<TransactionDTO> getDataByTransactionEntity(Long bankId, Map<String, String> headerData) {
+	public List<TransactionDTO> getDataByTransactionEntity(/*Long bankId*/ String bankaccountNo, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
 		if (validateOrNot == true) {
 			List<TransactionDTO> dtos = new ArrayList<>();
-			List<TransactionEntity> byWalletId = transactionRepo.findByWalletId(bankId);
+//			List<TransactionEntity> byWalletId = transactionRepo.findByWalletId(bankId);
+			List<TransactionEntity> byWalletId = transactionRepo.findBytRaccountNo(bankaccountNo);
 			for (TransactionEntity one : byWalletId) {
 				TransactionDTO convertEntity_To_DTOTransaction = walletHelper.ConvertEntity_To_DTOTransaction(one);
 				dtos.add(convertEntity_To_DTOTransaction);

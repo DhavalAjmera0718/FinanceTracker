@@ -43,7 +43,7 @@ public class WalletController {
 
 	/******************************************************* [WALLET GET BY ID ]***************************************************************************/
 	@GetMapping("/getWalletDataByid/{id}")
-	public ResponseEntity<WalletProxy> GetWalletDataByID(@PathVariable("id") Long id,@RequestHeader Map<String, String> headerdata) throws Exception {
+	public ResponseEntity<WalletProxy> GetWalletDataByID(@PathVariable("id") String id,@RequestHeader Map<String, String> headerdata) throws Exception {
 		if (id != null) {
 
 			return new ResponseEntity<WalletProxy>(service.GetWalletDataByID(id,headerdata), HttpStatus.OK);
@@ -79,7 +79,7 @@ public class WalletController {
 
 	}
 
-	/********************************************************************* * [DEPOSITE MONEY]**************************************************************************************/
+	/**********************************************************[WITHDRAW  MONEY BY CASH]**************************************************************************************/
 	@PostMapping("withDrawMoney/{accontNumber}")
 	public ResponseEntity<String> withDrawMoney(@PathVariable("accontNumber") String accontNumber,
 			@RequestBody TransactionDTO money,@RequestHeader Map<String, String> headerdata) {
@@ -111,7 +111,7 @@ public class WalletController {
 	}
 
 	@GetMapping("getDataByTransactionEntity/{bankId}")
-	public ResponseEntity<List<TransactionDTO>> getDataByTransactionEntity(@PathVariable("bankId") Long bankId,@RequestHeader Map<String, String> headerdata) {
+	public ResponseEntity<List<TransactionDTO>> getDataByTransactionEntity(@PathVariable("bankId") String bankId,@RequestHeader Map<String, String> headerdata) {
 		return new ResponseEntity<List<TransactionDTO>>(service.getDataByTransactionEntity(bankId,headerdata), HttpStatus.OK);
 	}
 
