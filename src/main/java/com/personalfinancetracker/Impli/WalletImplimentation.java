@@ -154,7 +154,7 @@ public class WalletImplimentation implements WalletService {
 		}
 	}
 
-	/******************************************************** * [DELET WALLET DATA BY ID ]***************************************************************************************************/
+	/********************************************************[DELET WALLET DATA BY ID ]***************************************************************************************************/
 	@Override
 	public String DeleteWalletData(Long id, Map<String, String> headerData) {
 		Boolean validateOrNot = check.validateOrNot(headerData);
