@@ -38,3 +38,5 @@ DEPOSITE COMES DROM DIFF BANK ACCOUNT - http://localhost:7777/wallet/DepositesFr
     "senderBankAc":"SBI7878989854",
     "receiveMoney":1000
 }
+amazone bucket AKIA47CRVOZCY63JX4GU
+fTMwdKPqE2M6cWp1f6OBwvA6svlH7kY+EKOsakPe
